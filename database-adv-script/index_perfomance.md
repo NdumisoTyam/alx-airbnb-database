@@ -1,37 +1,23 @@
--- ===== database_index.sql =====
+# Index Performance Improvement
 
--- Create indexes on high-usage columns
+## Objective
+Identify and create indexes on high-usage columns in Users, Bookings, and Properties tables to improve query performance.
 
--- User table indexes
-CREATE INDEX idx_user_email ON users(email);
+---
 
--- Booking table indexes
-CREATE INDEX idx_booking_user_id ON bookings(user_id);
-CREATE INDEX idx_booking_property_id ON bookings(property_id);
-CREATE INDEX idx_booking_booking_date ON bookings(booking_date);
+## High-Usage Columns Identified
+- **Users**: `email`
+- **Bookings**: `user_id`, `property_id`, `booking_date`
+- **Properties**: `location`, `owner_id`
 
--- Property table indexes
-CREATE INDEX idx_property_location ON properties(location);
-CREATE INDEX idx_property_owner_id ON properties(owner_id);
+---
 
+## Index Creation Commands
 
--- ============================
--- Example queries for performance measurement
--- Run these BEFORE creating indexes to get baseline stats:
-
--- Example 1: Query bookings by a specific user ordered by date
-EXPLAIN ANALYZE
-SELECT *
-FROM bookings
-WHERE user_id = 123
-ORDER BY booking_date DESC;
-
--- Example 2: Join bookings with properties by property_id
-EXPLAIN ANALYZE
-SELECT b.*, p.*
-FROM bookings b
-JOIN properties p ON b.property_id = p.property_id
-WHERE p.location = 'Cape Town';
-
--- ============================
--- After running above, run CREATE INDEX statements, then rerun EXPLAIN ANALYZE on same queries.
+```sql
+CREATE INDEX idx_users_email ON users(email);
+CREATE INDEX idx_bookings_user_id ON bookings(user_id);
+CREATE INDEX idx_bookings_property_id ON bookings(property_id);
+CREATE INDEX idx_bookings_booking_date ON bookings(booking_date);
+CREATE INDEX idx_properties_location ON properties(location);
+CREATE INDEX idx_properties_owner_id ON properties(owner_id);

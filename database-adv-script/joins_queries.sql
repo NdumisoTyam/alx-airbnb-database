@@ -9,7 +9,8 @@ SELECT
     users.name,
     users.email
 FROM bookings
-INNER JOIN users ON bookings.user_id = users.user_id;
+INNER JOIN users ON bookings.user_id = users.user_id
+ORDER BY bookings.booking_id;
 
 SELECT 
     properties.property_id,
@@ -19,9 +20,11 @@ SELECT
     reviews.rating,
     reviews.comment
 FROM properties
-LEFT JOIN reviews ON properties.property_id = reviews.property_id;
+LEFT JOIN reviews ON properties.property_id = reviews.property_id
+ORDER BY properties.property_id;
 
-SELECT 
+(
+  SELECT 
     users.user_id,
     users.name,
     users.email,
@@ -29,5 +32,21 @@ SELECT
     bookings.property_id,
     bookings.check_in_date,
     bookings.total_price
-FROM users
-FULL OUTER JOIN bookings ON users.user_id = bookings.user_id;
+  FROM users
+  LEFT JOIN bookings ON users.user_id = bookings.user_id
+)
+UNION
+(
+  SELECT 
+    users.user_id,
+    users.name,
+    users.email,
+    bookings.booking_id,
+    bookings.property_id,
+    bookings.check_in_date,
+    bookings.total_price
+  FROM bookings
+  LEFT JOIN users ON users.user_id = bookings.user_id
+)
+ORDER BY user_id;
+
